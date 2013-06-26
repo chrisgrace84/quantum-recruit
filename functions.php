@@ -1,5 +1,5 @@
 <?php
-
+	// function allows one line of nicely condensed code for all redirects
 	function redirect_to($location = NULL){
 		if ($location != NULL){
 			header("Location: {$location}");
@@ -7,6 +7,7 @@
 		}
 	}
 
+	// escape any nasty symbols that will mess with MySQL	
 	function mysql_escape_prep( $value ) {
 		$magic_quotes_active = get_magic_quotes_gpc();
 		$new_enough_php = function_exists( "mysql_real_escape_string" ); // i.e. PHP >= v4.3.0
@@ -29,10 +30,11 @@
 		}
 	}
 	
+	// grab all pages from database 
 	function get_all_pages($public = true){
 		global $connection;
 		$query = "SELECT *
-				FROM pages";
+			FROM pages";
 		// only show visible pages in the public website
 		if ($public){ 
 			$query .= " WHERE visible = 1";
@@ -43,10 +45,12 @@
 		return $page_set;
 	}
 	
+	// grab all jobs from database
 	function get_all_jobs($public = true){
 		global $connection;
 		$query = "SELECT *
-				FROM jobs";
+			FROM jobs";
+		// only show visible jobs in the public website
 		if ($public){ 
 			$query .= " WHERE visible = 1";
 		}
@@ -56,17 +60,20 @@
 		return $job_set;
 	}
 	
-	// Function can be used for getting both pages and jobs tables
+	// Function can be used for grabbing both pages and jobs tables
+	// will most likly use but may have to keep them separated for future improvements
 	/*function get_all_rows($table){
 		global $connection;
 		$query = "SELECT * 
-				FROM {$table}
-				ORDER BY position ASC";
+			FROM {$table}
+			ORDER BY position ASC";
 		$result_set = mysql_query($query, $connection);
 		confirm_query($result_set);
 		return $result_set;
 	}*/
 	
+	// grab page from database by its id to match the selected page value in the url
+	// can then use to display content when its page is selected  
 	function get_page_by_id($page_id){
 		global $connection;
 		$query = "SELECT * "; 
@@ -82,6 +89,8 @@
 		}
 	}
 	
+	// grab job from database by its id to match the selected job value in the url
+	// can then use to display content when its job is selected 
 	function get_job_by_id($job_id){
 		global $connection;
 		$query = "SELECT * "; 
@@ -97,6 +106,8 @@
 		}
 	}
 	
+	// finds the selected page from the url value
+	// can then use variables to display content based on the selected page or job
 	function find_selected_page() {
 		global $selected_page;
 		global $selected_job;
@@ -112,6 +123,8 @@
 		}
 	}
 	
+	// public nav or staff nav can be used simply by passing in a true or false statement
+	// brilliant ;)
 	function navigation($selected_page, $public = true) {
 		$output = "<ul id=\"category-menu\">";
 		// catch the database query to get all pages
@@ -137,6 +150,7 @@
 		return $output;
 	}
 	
+	// display jobs 
 	function get_recent_jobs($public = true) {
 		$job_set = get_all_jobs($public);
 		while ($job = mysql_fetch_array($job_set)) {
