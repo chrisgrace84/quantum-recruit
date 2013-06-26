@@ -8,7 +8,12 @@
   
     <div id="side-bar-left">
         <div class="element">
-			<?php echo navigation($selected_page, $public = false); ?>
+			<?php 
+				// call navigation function to display the staff area nav
+				// staff area nav displays pages that have been set invisible to the public area
+				// staff can then select this page to edit or set visible to the public area
+				echo navigation($selected_page, $public = false); 
+			?>
 			
 			<p><a href="new_page.php">+ Add a new page</a></p>
 			<p><a href="new_job.php">+ Add a new job</a></p>
@@ -18,10 +23,12 @@
     
     <div id="content">
 		<?php 
+			// display the selected page if pages are selected
 			if (!is_null($selected_page)) { 
 				echo "<h1>{$selected_page["page_title"]}</h1>";
 				echo "<p>" . $selected_page["content"] . "</p>";
 				echo "<p><a href=\"edit_page.php?page=" . $selected_page["id"] . "\">Edit Page</a></p>";
+			// otherwise, display the selected job if a job is selected
 			} elseif (!is_null($selected_job)) { 
 				$output = "<h1>{$selected_job["job_title"]}</h1>";
 				$output .= "<p><strong>Location: </strong>" . $selected_job["location"] . "</p>";
@@ -32,6 +39,7 @@
 				$output .= "<p><strong>Job description:</strong><br />" . $selected_job["content"] . "</p>";
 				$output .= "<p><a href=\"edit_job.php?job=" . $selected_job["id"] . "\">Edit Job Post</a></p>";
 				echo $output;
+			// if neither a page or a job is selected, redirect to a default page (page 1)
 			} else {
 				redirect_to("content.php?page=1");
 			} 
@@ -53,7 +61,10 @@
 		</div>
 		<div class="element">
 			<div class="element-header">Latest Jobs</div>
-           	<?php get_recent_jobs($public = false); ?>
+	           	<?php 
+	           		// display all recently added jobs
+	           		get_recent_jobs($public = false); 
+	           	?>
 		</div>
     </div><!--#side-bar-right-->
 
