@@ -61,7 +61,7 @@
 	}
 	
 	// Function can be used for grabbing both pages and jobs tables
-	// will most likly use but may have to keep them separated for future improvements
+	// will most likely use but may have to keep them separated for future improvements
 	/*function get_all_rows($table){
 		global $connection;
 		$query = "SELECT * 
