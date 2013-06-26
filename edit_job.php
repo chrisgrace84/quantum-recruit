@@ -1,20 +1,21 @@
 <?php require_once("includes/session.php"); ?>
 <?php require_once("includes/connection.php"); ?>
 <?php require_once("includes/functions.php"); ?>
+<?php require_once("includes/form_functions.php"); ?>
 <?php confirm_logged_in(); ?>
 <?php find_selected_page(); ?>
-<?php include_once("includes/form_functions.php"); ?>
 <?php
-	// check that url value for page is an integer, otherwise redirect to index.php
+	// check the url value for job is an integer (number), otherwise redirect to the homepage
 	if (intval($_GET['job']) == 0) {
 		redirect_to("index.php");
 	}
 	
+	// if the form submit button is clicked, execute the following code
 	if (isset($_POST['submit'])) {
 		
 		$errors = array();
 		
-		// function disallows page title to be submitted if its over 30 characters
+		// function disallows page title to be submitted if its over 50 characters
 		$fields_with_lengths = array('job_title' => 'Job name');
 		foreach($fields_with_lengths as $fieldname => $formalname ) {
 			if (strlen(trim(mysql_escape_prep($_POST[$fieldname]))) > 50) { 
@@ -22,7 +23,7 @@
 			}
 		}
 		
-		// function disallows fields to be submitted if its empty
+		// function disallows fields within this array to be submitted if they havent been filled
 		$required_fields = array('job_title' => 'Job name',
 								'location' => 'Location',
 								'salary' => 'Salary',
@@ -38,7 +39,7 @@
 		}
 		
 		if (empty($errors)) {
-			// perform page update
+			// perform page update if there are no errors collected in an array
 			$id = mysql_escape_prep($_GET['job']);
 			$job_title = mysql_escape_prep($_POST['job_title']);
 			$location = mysql_escape_prep($_POST['location']);
@@ -49,8 +50,7 @@
 			$visible = mysql_escape_prep($_POST['visible']);
 			$content = mysql_escape_prep($_POST['content']);
 			
-			$date = date_create();
-			
+			// construct MySQL query to update following data 
 			$query = "UPDATE jobs SET
 						job_title = '{$job_title}',
 						location = '{$location}',
@@ -62,17 +62,16 @@
 						content = '{$content}'
 					WHERE id = {$id}";
 			$result = mysql_query($query, $connection);
-			// confirm_query($result); // alternative error message
-			if (mysql_affected_rows() == 1) {
-				// Message was submitted
+			if (mysql_affected_rows() == 1) { // check ONLY one row in the jobs table was affected 
+				// construct message if update was successful
 				$message = "The job was successfully updated.";
 			} else {
-			// Message failed to submit
+			// construct message and MySQL error if update failed
 				$message = "The job failed to update.";
 				$message .= "<br />" . mysql_error();
 			}
 		} else {
-			// $errors occurred
+			// construct message with the amount of fields that came back with errors
 			if (count($errors) == 1) {
 				$message = "There was 1 error in the form.";
 			} else {
@@ -88,7 +87,10 @@
   
     <div id="side-bar-left">
         <div class="element">
-			<?php echo navigation($selected_page, $public = false); ?>
+			<?php 
+				// display staff navigation (not pages that are invisible)
+				echo navigation($selected_page, $public = false); 
+			?>
 			
 			<p><a href="new_page.php">+ Add a new page</a></p>
 			<p><a href="new_job.php">+ Add a new job</a></p>
@@ -98,6 +100,8 @@
     
     <div id="content">
 			<h1>Edit Job Post: <?php echo $selected_job['job_title']; ?></h1>
+			
+			<?php // display constucted message depending on query success and errors ?>
 			<?php if (!empty($message)) { echo "<p>" . $message . "</p>"; } ?>
 			<?php if (isset($errors)) { display_errors($errors); } ?>
 						
@@ -122,7 +126,7 @@
 						<?php
 							$job_set = get_all_jobs($public);
 							$job_count = mysql_num_rows($job_set);
-							// $subject_count + 1 cos we are adding a subject
+							// display the amount of rows there are in the jobs table in the database
 							for($count=1; $count <= $job_count; $count++) {
 								echo "<option value=\"{$count}\"";
 								if ($selected_job['position'] == $count){
