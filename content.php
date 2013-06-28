@@ -1,9 +1,9 @@
-<?php ob_start(); ?>// start output buffering as headers are being used for redirects 
+<?php ob_start(); ?> // start output buffering as headers are being used for redirects 
 <?php require_once("includes/session.php"); ?>
 <?php require_once("includes/connection.php"); ?>
 <?php require_once("includes/functions.php"); ?>
-<?php confirm_logged_in(); // function confirms if the user is logged in. Otherwise they are redirected to the login page ?>
-<?php find_selected_page(); // function grabs values from the url to decide what page or job is selected ?>
+<?php confirm_logged_in(); ?> // function confirms if the user is logged in. Otherwise they are redirected to the login page 
+<?php find_selected_page(); ?> // function grabs values from the url to decide what page or job is selected 
 <?php include("includes/header.php"); ?>
   
     <div id="side-bar-left">
