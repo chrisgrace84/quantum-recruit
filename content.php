@@ -1,4 +1,4 @@
-<?php ob_start(); // start output buffering as headers are being used for redirects ?>
+<?php ob_start(); ?>// start output buffering as headers are being used for redirects 
 <?php require_once("includes/session.php"); ?>
 <?php require_once("includes/connection.php"); ?>
 <?php require_once("includes/functions.php"); ?>
