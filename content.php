@@ -69,4 +69,4 @@
     </div><!--#side-bar-right-->
 
 <?php require("includes/footer.php"); ?>
-<?php ob_flush(); // destroy the output buffering ?>
+<?php ob_flush(); ?> // destroy the output buffering 
